@@ -25,6 +25,7 @@ env:
     - CONTAINER_NAME="comanche-build-ubuntu1604"
       DOCKERIMG="ubuntu:16.04"  
       BOOTSTRAP_FILE="./install-apts.sh"
+      HOSTMODULE="-v /lib/modules:/lib/modules:ro -v /usr/src:/usr/src:ro"
 
 # comanche requires cmake 3.6.2 (to build google/benchmark)
 # for local building testing, remener to run git submodule init/update
