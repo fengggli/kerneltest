@@ -20,19 +20,25 @@ env:
   matrix:
     - CONTAINER_NAME="comanche-build-fedora27"
       DOCKERIMG="fedora:27" 
+      BOOTSTRAP_FILE="./install-yum.sh"
       HOSTMODULE="-v /lib/modules:/lib/modules:ro -v /usr/src:/usr/src:ro"
     - CONTAINER_NAME="comanche-build-ubuntu1604"
       DOCKERIMG="ubuntu:16.04"  
+      BOOTSTRAP_FILE="./install-apts.sh"
 
 # comanche requires cmake 3.6.2 (to build google/benchmark)
 # for local building testing, remener to run git submodule init/update
 # https://stackoverflow.com/questions/33013539/docker-loading-kernel-modules
 install:
+  - ls -al /lib/modules
   - docker run -d --name ${CONTAINER_NAME} --privileged --cap-add=ALL
     -v $(pwd):/travis ${HOSTMODULE}
     ${DOCKERIMG}
     tail -f /dev/null
   - docker ps
+  - docker exec -t ${CONTAINER_NAME} bash  -c "
+    cd /travis/deps;
+    ${BOOTSTRAP_FILE};"
 
 # note: limit job number to 2 to avoid out-of-memory for rocksdb build
 script:
