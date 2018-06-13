@@ -29,8 +29,12 @@ env:
 # comanche requires cmake 3.6.2 (to build google/benchmark)
 # for local building testing, remener to run git submodule init/update
 # https://stackoverflow.com/questions/33013539/docker-loading-kernel-modules
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install linux-headers-`uname -r`
 install:
   - ls -al /lib/modules
+  - ls -al /lib/modules/*/build
   - docker run -d --name ${CONTAINER_NAME} --privileged --cap-add=ALL
     -v $(pwd):/travis ${HOSTMODULE}
     ${DOCKERIMG}
@@ -43,6 +47,8 @@ install:
 # note: limit job number to 2 to avoid out-of-memory for rocksdb build
 script:
   - docker exec -t ${CONTAINER_NAME} bash -c "
+    ls -al /lib/modules
+    ls -al /lib/modules/*/build
     cd /travis ;
     make;"
 
