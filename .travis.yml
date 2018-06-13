@@ -47,8 +47,8 @@ install:
 # note: limit job number to 2 to avoid out-of-memory for rocksdb build
 script:
   - docker exec -t ${CONTAINER_NAME} bash -c "
-    ls -al /lib/modules
-    ls -al /lib/modules/*/build
+    ls -al /lib/modules;
+    ls -al /lib/modules/*/build;
     cd /travis ;
     make;"
 
